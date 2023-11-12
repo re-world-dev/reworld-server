@@ -16,5 +16,5 @@ SRV_MAX_PLAYER = server.MAX_PLAYER
 
 if __name__ == "__main__":
     ALI.start()
-    server = srv.Server(address=SRV_ADRR, port=SRV_PORT, max=5, debug=DEBUG)
+    server = srv.Server(address=SRV_ADRR, port=SRV_PORT, max=SRV_MAX_PLAYER, debug=DEBUG)
     server.start()
