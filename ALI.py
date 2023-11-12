@@ -38,5 +38,11 @@ def start():
         print("DiscordRichPresence : INSTALLED")
     except ModuleNotFoundError:
         os.system("pip install discord-rich-presence")
+    #signal
+    try:
+        import signal
+        print("signal : INSTALLED")
+    except ModuleNotFoundError:
+        os.system("pip install signal")
     
     print("LIBRAIRIES CHECKED !")

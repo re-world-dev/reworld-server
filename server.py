@@ -5,6 +5,7 @@ import os
 import time as tm
 from socket import *
 from threading import Thread
+import signal
 
 
 class Server(object):
@@ -20,6 +21,7 @@ class Server(object):
         self.clients_list = []
         self.clients_thread = []
         self.status = 0
+        signal.signal(signal.SIGINT, self.stop)
         self.log("Server created !", 0)
 
     def start(self):
@@ -28,6 +30,7 @@ class Server(object):
         self.status = 1
         self.socket.listen(self.max_players + 1)
         self.main()
+
 
     def main(self):
         while self.status == 1:
@@ -39,13 +42,11 @@ class Server(object):
                 cl_thread.start()
                 self.clients_thread.append(cl_thread)
                 tm.sleep(0.1)
-            except KeyboardInterrupt:
-                self.stop()
             except Exception as e:
                 self.log(f"Skipping 1 main loop : {e}", 3)
                 continue
 
-    def stop(self, crash=False, reason="UNKNOW REASON"):
+    def stop(self, signal=None, crash=False, reason="UNKNOW REASON"):
         if crash:
             self.log(f"A FATAL ERROR OCCURED : {reason}", 100)
             self.log("Creating the crash report...", 0)
