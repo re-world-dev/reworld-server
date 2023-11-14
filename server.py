@@ -140,8 +140,21 @@ class Client(object):
 
     def main(self):
         while self.connected:
-            msg = self.socket.recv(1024)
-            ...
+            try:
+                msg = self.socket.recv(1024)
+            except Exception as e:
+                self.log(f"Skipping one loop in client main : {e}", 3)
+                continue
+            if msg[0] == "something":       #will not work for an evident reason. it is a template
+                #do something
+                self.socket.send("other thing", 1024)
+            elif msg[0] == "something":
+                #do something
+                self.socket.send("other thing", 1024)
+            else:
+                self.log(f"An unknow request was sent by the client {self} : {msg}.", 2)
+                self.log("Client will be disconnected.")
+                break
         self.socket.close()
 
     def disconnect(self):
