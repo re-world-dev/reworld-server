@@ -6,6 +6,7 @@ import time as tm
 from socket import *
 from threading import Thread
 import signal
+import tkinter as tk
 
 
 class Server(object):
@@ -28,6 +29,20 @@ class Server(object):
         """Start the server"""
         self.log("Launching the server.", 3)
         self.status = 1
+
+        def stopper():
+            self.tk_root = tk.Tk()
+            self.tk_root.title("RE:WORLD Server")
+
+            self.btn_stop = tk.Button(self.tk_root, text="STOP", bg="red", width=10, height=5, command=self.stop, font=("", 40))
+            self.btn_stop.pack()
+            tk.mainloop()
+        
+        th = Thread(target=stopper)
+        th.start()
+
+        
+
         self.socket.listen(self.max_players + 1)
         self.main()
 
@@ -47,6 +62,7 @@ class Server(object):
                 continue
 
     def stop(self, signal=None, crash=False, reason="UNKNOW REASON"):
+        self.tk_root.destroy()
         if crash:
             self.log(f"A FATAL ERROR OCCURED : {reason}", 100)
             self.log("Creating the crash report...", 0)
