@@ -1,4 +1,8 @@
 """Server system"""
+#===================
+#     RE:WORLD
+#===================
+# Server Software
 
 #IMPORTS
 import os
@@ -9,6 +13,7 @@ import signal
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter import messagebox
+
 
 
 class Server(object):
