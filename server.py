@@ -10,16 +10,27 @@ import time as tm
 from socket import *
 from threading import Thread
 import signal
+import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
+from tkinter import messagebox
 
 
 
 class Server(object):
     def __init__(self, address:str, port:int, max:int, debug:bool=False):
+        print("Initialising. Please wait...")
         self.max_players = max
         self.DEBUG = debug
         self.addr = address
         self.port = port
         self.be_ready_to_log()
+        
+        
+        th = Thread(target=self.gui)
+        th.start()
+
+        tm.sleep(5)
+
         self.log("Creating the server...", 0)
         self.socket = socket(AF_INET, SOCK_STREAM)
         self.socket.bind((self.addr, self.port))
@@ -29,10 +40,30 @@ class Server(object):
         signal.signal(signal.SIGINT, self.stop)
         self.log("Server created !", 0)
 
+    def gui(self):
+            self.tk_root = tk.Tk()
+            self.tk_root.title("RE:WORLD Server")
+
+            self.scrolled_txt = ScrolledText(self.tk_root, height=50, width=100)
+            self.scrolled_txt.pack()
+
+            self.scrolled_txt.insert(tk.END, "Initialising. Please wait...\n")
+
+            #self.scrolled_txt.attribute(state="disabled")
+
+            self.btn_stop = tk.Button(self.tk_root, text="STOP", bg="red", command=self.stop)
+            self.btn_stop.pack()
+
+            self.tk_root.resizable(False, False)
+            tk.mainloop()
+            self.stop()
+
+    
     def start(self):
         """Start the server"""
         self.log("Launching the server.", 3)
         self.status = 1
+
         self.socket.listen(self.max_players + 1)
         self.main()
 
@@ -70,6 +101,7 @@ ________________________________________________________________________________
             cl.disconnect()
         self.status = 2
         self.socket.close()
+        self.tk_root.destroy()
         if crash:
             exit(-1)
         else:
@@ -103,6 +135,7 @@ ________________________________________________________________________________
             t = "UNKNOW"
         time = self.gettime()
         text = f"[{time}] [Server/{t}]: {msg}"
+        self.scrolled_txt.insert(tk.END, text + "\n")
         print(text)
         with open(self.logfile, "+a") as file:
             file.write(text + "\n")
@@ -129,8 +162,21 @@ class Client(object):
 
     def main(self):
         while self.connected:
-            msg = self.socket.recv(1024)
-            ...
+            try:
+                msg = self.socket.recv(1024)
+            except Exception as e:
+                self.log(f"Skipping one loop in client main : {e}", 3)
+                continue
+            if msg[0] == "something":       #will not work for an evident reason. it is a template
+                #do something
+                self.socket.send("other thing", 1024)
+            elif msg[0] == "something":
+                #do something
+                self.socket.send("other thing", 1024)
+            else:
+                self.log(f"An unknow request was sent by the client {self} : {msg}.", 2)
+                self.log("Client will be disconnected.")
+                break
         self.socket.close()
 
     def disconnect(self):
