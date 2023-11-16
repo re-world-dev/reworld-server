@@ -17,17 +17,20 @@ from tkinter import messagebox
 
 
 class Server(object):
-    def __init__(self, address:str, port:int, max:int, debug:bool=False):
+    def __init__(self, address:str, port:int, max:int, debug:bool=False, nogui=False):
         print("Initialising. Please wait...")
+        self.nogui = nogui
         self.max_players = max
         self.DEBUG = debug
         self.addr = address
         self.port = port
         self.be_ready_to_log()
+        if self.nogui:
+            self.log("Argument -nogui used. Ctrl+c is not disponnible for a technical issue. Alt+F4 is to use in this case, but will cause maybe some issue for saving, port using, and client connexion.", 1)
         
-        
-        th = Thread(target=self.gui)
-        th.start()
+        if not(self.nogui):
+            th = Thread(target=self.gui)
+            th.start()
 
         tm.sleep(5)
 
@@ -101,7 +104,8 @@ ________________________________________________________________________________
             cl.disconnect()
         self.status = 2
         self.socket.close()
-        self.tk_root.destroy()
+        if not(self.nogui):
+            self.tk_root.destroy()
         if crash:
             exit(-1)
         else:
@@ -135,7 +139,8 @@ ________________________________________________________________________________
             t = "UNKNOW"
         time = self.gettime()
         text = f"[{time}] [Server/{t}]: {msg}"
-        self.scrolled_txt.insert(tk.END, text + "\n")
+        if not(self.nogui):
+            self.scrolled_txt.insert(tk.END, text + "\n")
         print(text)
         with open(self.logfile, "+a") as file:
             file.write(text + "\n")

@@ -1,0 +1,4 @@
+[18:12:47] [Server/WARN]: Argument -nogui used. Ctrl+c is not disponnible for a technical issue. Alt+F4 is to use in this case, but will cause maybe some issue for saving, port using, and client connexion.
+[18:12:52] [Server/INFO]: Creating the server...
+[18:12:52] [Server/INFO]: Server created !
+[18:12:52] [Server/DEBUG]: Launching the server.
