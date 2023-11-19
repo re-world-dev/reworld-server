@@ -3,12 +3,12 @@
 #===================
 # Server Configuration
 
-SERVER_ADDRESS = "0.0.0.0" # Define server listening address (0.0.0.0 = All IP)
-SERVER_PORT = "9605" # Define Server Port
-MAX_PLAYER = "10" # Define max players can connect to server
+SERVER_ADDRESS = "0.0.0.0" # Define server listening address (0.0.0.0 = All IP, STR)
+SERVER_PORT = 9605 # Define Server Port (INT)
+MAX_PLAYER = 10 # Define max players can connect to server (INT)
 
 
-# Error Messages
+# Error Messages (STR)
 
 ERR_MSG_BANNED = "Oh no you have been banned from server reason : "
 ERR_MSG_KICKED = "Kicked by operator"
